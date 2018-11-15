@@ -10,7 +10,7 @@ listofAllsymp = {
     "MainSymp6": ["s1", "s2", "s3", "s4"]
 }
 
-# Pick
+# Pick MainSymptoms from Allsymptom list
 QuesList = []
 for ms,ns in listofAllsymp.items():
     QuesList.append(ms)
@@ -22,16 +22,13 @@ for r, v in listofAllsymp.items():
     ns = 0
     ans = input("Answer with  'y'  or  'n'\nDo you have/feel "+str(r)+" : ")
     print()
-    if ans == "y":  # replace this with while loop
+    if ans == "y":
         index = QuesList.index(r)
-        print(QuesList[q_index], r, "xxxxxx")
         if QuesList[q_index] == r:
             for NS in v:
                 if ns < len(v):
                     QuesList.insert(index+1, v[ns])
-                    print(v[ns], ns, len(v))
                     ns = ns + 1
                     q_index = q_index + 1
     q_index = q_index + 1
-print("All Questions Asked: ",QuesList)
 print()
