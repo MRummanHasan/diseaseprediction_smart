@@ -20,42 +20,44 @@ for ms in listAllsymp:
     i = i+1
 print(quesList)
 # print()
+
 ms = 0
 aaa = []
 print(ms)
 aaa.append(str(listAllsymp[ms][0]))
-index = quesList.index(aaa)  # index of MS
+index = quesList.index(aaa)  # index of MainSymp
 print(index)
 
 eachdataset = 0
-for q in quesList:
+for ques in quesList:
     
-    ans = input("Answer with  'y'  or  'n'  \nDo you have/feel "+str(q)[1:-1].strip()+" : ")
+    ans = input("Answer with  'y'  or  'n'\nDo you have/feel "+str(ques)[1:-1].strip()+" : ")
     print()
-    if ans ==  "y":
+    if ans ==  "y": #replace this with while loop
+
         for i in listAllsymp:
             for j in i:
-                print(j,str(q)[1:-1],"xxxxxxxxxxx")
-                if j == str(q)[1:-1]:
+                print(j,str(ques)[1:-1],"xxxxxxxxxxx")
+                if j == str(ques)[1:-1]:
                     j =  'yes'
                     print(j,"--------------")
 
 
-        # find index of MS(deepCOugh) from listAllsymp, pick Allsymptoms; insert Allsymtom to QuestionList
-        for MS in listAllsymp:
-            print(MS[0], str(q)[2:-2])
+        # find index of MainSymp(deepCough) from listAllsymp, pick Allsymptoms; insert Allsymtom to QuestionList
+        for MainSymp in listAllsymp:
+            print(MainSymp[0], str(ques)[2:-2])
 
-            if MS[0] == str(q)[2:-2]:
+            if MainSymp[0] == str(ques)[2:-2]:
                 ns = 1
 
-                for NS in MS:
+                for normSymp in MainSymp:
                     try:
-                        if ns < len(MS):
+                        if ns < len(MainSymp):
                             allsymp = listAllsymp[eachdataset][ns]
                             ns = ns + 1
-                            index = quesList.index(aaa)  # index of MS
+                            index = quesList.index(aaa)  # index of MainSymp
                             print(ms)
-                            # insert after index of MS, Allsympton of MS
+                            # insert after index of MainSymp, Allsympton of MainSymp
                             quesList.insert(index+1, allsymp)
                             print("===== symp added to questionlist", ns)
                             # print("ms ki iteration", ms)
@@ -65,6 +67,7 @@ for q in quesList:
                 print("---finalilist-----", quesList, "-----------")
                 eachdataset = eachdataset + 1
                 print(eachdataset, "Allsymplist")
+
             else:
                 pass
     else:
@@ -80,19 +83,19 @@ for q in quesList:
 #     i = i+1
 
 
-# find index of MS(deepCOugh) from listAllsymp, pick Allsymptoms; insert Allsymtom to QuestionList
+# find index of MainSymp(deepCOugh) from listAllsymp, pick Allsymptoms; insert Allsymtom to QuestionList
 # ms = 0
-# for MS in listAllsymp:
-#     print(MS[0],str(quesList[ms])[2:-2])
+# for MainSymp in listAllsymp:
+#     print(MainSymp[0],str(quesList[ms])[2:-2])
 
-#     if MS[0] == str(q)[2:-2]:
-#         print(MS, "------")
+#     if MainSymp[0] == str(ques)[2:-2]:
+#         print(MainSymp, "------")
 #         ns = 1
-#         for NS in MS:
-#             if ns < len(MS):
+#         for normSymp in MainSymp:
+#             if ns < len(MainSymp):
 #                 allsymp = listAllsymp[0][ns]
 #                 ns = ns + 1
-#             # insert after index of MS, Allsympton of MS
+#             # insert after index of MainSymp, Allsympton of MainSymp
 #                 quesList.insert(index+1, allsymp)
 #                 print("======yes symp added to question")
 
