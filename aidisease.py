@@ -19,10 +19,7 @@ class Disease():
 # sql = 'SELECT D.disease_name, S.symptom_name FROM diseases AS D JOIN disease_symptoms_bridgetable AS DC ON D.disease_id = DC.disease_id JOIN symptoms AS S ON S.symptom_id = DC.symptom_id'
 # a.execute(sql)
 # data = a.fetchall()
-
-# for x in range(0, 3):
-#     print ("We're on time %d" % (x))
-
+########################     OR    #####################
 # MainSymp : symp1, symp2....
 listofAllsymp = {
     "Deep Cough": ["ear Pain", "sore Swelling", "change in Voice", "difficulty in breathing"],
@@ -67,4 +64,32 @@ for dp in dArray:
     symp_per[dp.name] = per
     
 print(symp_per)
+
+Doc_to_dept = {
+    'ENT': ['D0','D1'],
+    'General': ['flu','D3'],
+    'Cancer': ['oral','D4'],
+    'Skin': ['D5','D6'],
+    'D4': ['D7','D8'],
+    'D5': ['D0','D3'], 
+    'D6': ['D2','D4']
+}
+
+# Check Department
+inverse = [(value, key) for key, value in symp_per.items()]
+highVal = max(inverse)[0]
+print (highVal, "high index")
+
+# key at highest value
+highValKey = list(symp_per.keys())[list(symp_per.values()).index(highVal)]
+print(highValKey, "name")
+
+for dtdk,dtdv in Doc_to_dept.items():
+    print(dtdv)
+    if dtdv.__contains__(highValKey):
+        print("success this depart: ", dtdk)
+        break
+    else:
+        print("no suc")
+print("\nhmmm")
 
