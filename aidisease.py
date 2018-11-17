@@ -1,7 +1,8 @@
 import pymysql
 from scipy.spatial import distance
-user_location = [2,3]
+user_location = [2, 3]
 user_price = 500
+print("<<< Welcome to the IntelliHealth >>>")
 
 class Disease():
     def __init__(self, name, mainSymp, nSymp):
@@ -33,18 +34,20 @@ listofAllsymp = {
     'Diarrhea': ['watery stool', 'vomiting', 'abdominal cramps', 'belly pain'],
     'Eating or Weight Problems': ['W', 'fever']
 }
+
 # Populate Disease objects
 dArray = []
 i = 0
 for k, v in listofAllsymp.items():
     dArray.append(Disease("D"+str(i), k, v))
-    print(dArray[i].name, dArray[i].mainSymp, dArray[i].nSymp)
+    # print(dArray[i].name, dArray[i].mainSymp, dArray[i].nSymp)
     i = i + 1
-print()
+# print()
 
 # ASK SYMPTOMS
 for d in dArray:
-    ans = input("Answer with  'y'  or  'n'\nDo you have/feel " +                str(d.name)+" > ")
+    ans = input("Answer with  'y'  or  'n'\nDo you have/feel " +           str(d.name)+" > ")
+
     if ans == "y":
         for n in d.nSymp:
             # print(n)
@@ -53,9 +56,9 @@ for d in dArray:
                 d.nAns.append(NSans)
 
 # print details
-for docDetail in dArray:
-    print(docDetail.name, docDetail.mainSymp, docDetail.nSymp, docDetail.nAns)
-print()
+# for docDetail in dArray:
+#     print(docDetail.name, docDetail.mainSymp, docDetail.nSymp, docDetail.nAns)
+# print()
 
 # Calculate percentage of symptom occurance
 symp_percent = {}
@@ -64,7 +67,7 @@ for dp in dArray:
     tsymp = len(dp.nSymp)
     per = (ansSize / tsymp) * 100
     symp_percent[dp.name] = per
-print(symp_percent)
+# print(symp_percent)
 
 Doc_to_dept = {
     'ENT': ['D0', 'D1'],
@@ -77,66 +80,78 @@ Doc_to_dept = {
 }
 
 # Check Department
-def check_depart(symp_percent,Doc_to_dept):
+
+
+def check_depart(symp_percent, Doc_to_dept):
     inverse = [(value, key) for key, value in symp_percent.items()]
     highVal = max(inverse)[0]
-    print(highVal, "high index")
+    # print(highVal, "high index")
 
     # key at highest value
-    highValKey = list(symp_percent.keys())[list(symp_percent.values()).index(highVal)]
-    print(highValKey, "name")
+    highValKey = list(symp_percent.keys())[
+        list(symp_percent.values()).index(highVal)]
+    # print(highValKey, "name")
 
     for dtdk, dtdv in Doc_to_dept.items():
-        print(dtdv)
+        # print(dtdv)
         if dtdv.__contains__(highValKey):
-            print("success this depart: ")
+            # print("success this depart: ")
             return dtdk
-        else:
-            return 'General'
 
-thisdepart = check_depart(symp_percent,Doc_to_dept)
+    return 'General'
 
 
+thisdepart = check_depart(symp_percent, Doc_to_dept)
+
+# print(thisdepart, "department for SQL")
 # thisdepart = "ENT"
 sql = 'SELECT doc_name,doc_dept,doc_TimeTo, doc_timeFrom,doc_location,doc_price FROM doctor WHERE doc_dept = '+'"'+thisdepart+'"'
 a.execute(sql)
 data = a.fetchall()
+print(data)
+
 
 class Doctor():
-    def __init__(self, name, dept, timeTo, timeFrom, location,price):
+    def __init__(self, name, dept, timeTo, timeFrom, location, price):
         self.name = name
         self.dept = dept
         self.timeTo = timeTo
         self.timeFrom = timeFrom
         self.location = location
         self.price = price
+
+
 # distance cost of hospitals
 dist_of_Hosp = {
-    'Nazimabad Hospital' : [5,2],
-    'Johar Hospital' : [2,4],
-    'DHA Hospital' : [3,8],
-    'Saddar Skin Hospital' : [5,5]
+    'Nazimabad Hospital': [5, 2],
+    'Johar Hospital': [2, 4],
+    'DHA Hospital': [3, 8],
+    'Saddar Skin Hospital': [5, 5]
 }
 
 AllhospCord = []
 # Populate Doctor objects
 docObjArray = []
 for eachdoc in data:
-    docObjArray.append(Doctor(eachdoc[0], eachdoc[1] ,eachdoc[2], eachdoc[3], eachdoc[4],eachdoc[5]))
+    docObjArray.append(
+        Doctor(eachdoc[0], eachdoc[1], eachdoc[2], eachdoc[3], eachdoc[4], eachdoc[5]))
     #       name,  dept,  timeTo,  timeFrom,  location,   price
-    print(eachdoc[0], eachdoc[1] ,eachdoc[2], eachdoc[3], eachdoc[4],eachdoc[5])
-    
-    # Contraints for location
+    # print(eachdoc[0], eachdoc[1], eachdoc[2],          eachdoc[3], eachdoc[4], eachdoc[5])
+
+    # Contraints for Location
     hosp_cord = dist_of_Hosp[eachdoc[4]]
-    print(hosp_cord)
+    # print(hosp_cord, "hosp cordinate")
 
     user_points = (user_location[0], user_location[1], 0)
     hosp_points = (hosp_cord[0], hosp_cord[1], 0)
     dst = distance.euclidean(user_points, hosp_points)
-    print(dst)
+    # print(dst, "dsit from hosp")
     AllhospCord.append(dst)
     print()
 
-indexof_hospCord =  AllhospCord.index(min(AllhospCord))
-print("Nearest Hospital is: ",docObjArray[indexof_hospCord].location)
-
+try:
+    minVal = min(AllhospCord)
+    indexof_hospCord = AllhospCord.index(minVal)
+    print("Nearest Hospital is: ", docObjArray[indexof_hospCord].location)
+except:
+    print("Please visit your nearest Hospital")
