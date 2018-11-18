@@ -46,16 +46,34 @@ listofAllsymp = {
     'Eating or Weight Problems': ['W', 'fever']
 }
 
+
+# # INPUT: Raw Data from SQL
+# # OUTPUT: return Array of Objects of doctors-details
+# # FUNC: Populate Doctor objects
+def populateDoctor(data):
+    doctorObjArray = []
+    for eachdoc in data:
+        doctorObjArray.append(
+            Doctor(eachdoc[0], eachdoc[1], eachdoc[2], eachdoc[3], eachdoc[4], eachdoc[5]))
+        ##       name,  dept,  timeTo,  timeFrom,  location,   price
+        print("Dr.",eachdoc[0],"-", eachdoc[1],".Timings:", eachdoc[2],"-", eachdoc[3],"at", eachdoc[4],"Price:", eachdoc[5])
+
+    return doctorObjArray
+
+
 # # INPUR: Calculated-percentages of symptoms by User, Disease-to-Depart Data
 # # OUTPUT: Specific department name as patients symptoms
 # # FUNC: Check Department
 def check_depart(symp_percent, Disease_to_dept):
+
     inverse = [(value, key) for key, value in symp_percent.items()]
     highVal = max(inverse)[0]
 
-    # Key at highest value
-    highValKey = list(symp_percent.keys())[
-        list(symp_percent.values()).index(highVal)]
+    ## Key at highest value
+    if highVal != 0.0:
+        highValKey = list(symp_percent.keys())[list(symp_percent.values()).index(highVal)]
+    else:
+        return 'General'
 
     for dtdk, dtdv in Disease_to_dept.items():
         if dtdv.__contains__(highValKey):
@@ -63,6 +81,7 @@ def check_depart(symp_percent, Disease_to_dept):
             return dtdk  # matched deaprtment
 
     return 'General'
+
 
 # INPUT: nothing for now, BUT Raw Data from SQL
 # # OUTPUT: return Array of Objects of disease-details
@@ -90,7 +109,7 @@ Disease_to_dept = {
 # distance cost of hospitals
 dist_of_Hosp = {
     'Nazimabad Hospital': [5, 2],
-    'Johar Hospital': [2, 4],
+    'Johar Hospital': [1, 1],
     'DHA Hospital': [3, 8],
     'Saddar Skin Hospital': [5, 5]
 }
@@ -105,19 +124,7 @@ def fetchDatafromSQL(thisdepart):
     print(data)
     return data
 
-# # INPUT: Raw Data from SQL
-# # OUTPUT: return Array of Objects of doctors-details
-# # FUNC: Populate Doctor objects
-def populateDoctor(data):
-    doctorObjArray = []
-    for eachdoc in data:
-        doctorObjArray.append(
-            Doctor(eachdoc[0], eachdoc[1], eachdoc[2], eachdoc[3], eachdoc[4], eachdoc[5]))
-        ##       name,  dept,  timeTo,  timeFrom,  location,   price
-        print(eachdoc[0], eachdoc[1], eachdoc[2],
-              eachdoc[3], eachdoc[4], eachdoc[5])
 
-    return doctorObjArray
 
 # # INPUR: obj-array of disease
 # # OUTPUT: nothing
@@ -135,16 +142,14 @@ def printDisease(diseaseObjArray):
 def findNearestHosp(dist_of_Hosp, doctorObjArray):
     for eachdoc in doctorObjArray:
         AllhospCordinates = []
-        # Contraints for Location
+        # # Contraints for Location
         hosp_cord = dist_of_Hosp[eachdoc.location]
-        # print(hosp_cord, "hosp cordinate")
 
         user_points = (user_location[0], user_location[1], 0)
         hosp_points = (hosp_cord[0], hosp_cord[1], 0)
         dst = distance.euclidean(user_points, hosp_points)
         # print(dst, "dsit from hosp")
         AllhospCordinates.append(dst)
-
     print()
     try:
         minVal = min(AllhospCordinates)
@@ -178,18 +183,20 @@ for dispercent in diseaseObjArray:
     tsymp = len(dispercent.nSymp)
     per = (ansSize / tsymp) * 100
     symp_percent[dispercent.name] = per
-# print(symp_percent)
+print(symp_percent)
 
 
 # # STEP: 4
 thisdepart = check_depart(symp_percent, Disease_to_dept)
-
+print(thisdepart)
 # # STEP: 5
 # # Fetch data as per user
 data = fetchDatafromSQL(thisdepart)
-doctorObjArray = populateDoctor(data)
 
 # # STEP: 6
+doctorObjArray = populateDoctor(data)
+
+# # STEP: 7
 # # Tell nearest hospital
 findNearestHosp(dist_of_Hosp, doctorObjArray)
 
