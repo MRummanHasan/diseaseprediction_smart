@@ -121,7 +121,7 @@ def fetchDatafromSQL(thisdepart):
     sql = 'SELECT doc_name,doc_dept,doc_TimeTo, doc_timeFrom,doc_location,doc_price FROM doctor WHERE doc_dept = '+'"'+thisdepart+'"'
     a.execute(sql)
     data = a.fetchall()
-    print(data)
+    # print(data)
     return data
 
 
@@ -174,6 +174,7 @@ for d in diseaseObjArray:
             NSans = input("\nDo you have/feel "+str(n)+" : ")
             if NSans == 'y':
                 d.nAns.append(NSans)
+    print()
 
 # # STEP: 3
 # Calculate percentage of symptom occurance
@@ -183,12 +184,12 @@ for dispercent in diseaseObjArray:
     tsymp = len(dispercent.nSymp)
     per = (ansSize / tsymp) * 100
     symp_percent[dispercent.name] = per
-print(symp_percent)
-
+# print(symp_percent)
 
 # # STEP: 4
 thisdepart = check_depart(symp_percent, Disease_to_dept)
-print(thisdepart)
+# print(thisdepart)
+
 # # STEP: 5
 # # Fetch data as per user
 data = fetchDatafromSQL(thisdepart)
@@ -199,6 +200,3 @@ doctorObjArray = populateDoctor(data)
 # # STEP: 7
 # # Tell nearest hospital
 findNearestHosp(dist_of_Hosp, doctorObjArray)
-
-
-printDisease(diseaseObjArray)
