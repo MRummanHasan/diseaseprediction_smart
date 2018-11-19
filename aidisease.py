@@ -167,31 +167,42 @@ diseaseObjArray = populateDisease()
 # # STEP: 2
 # # ASK SYMPTOMS
 for d in diseaseObjArray:
-    ans = input("Answer with 'y' or 'n'\nDo you have/feel " +
-                str(d.mainSymp)+" >>> ")
+    ans = input("Answer with 'y' or 'n'\nDo you have/feel " + str(d.mainSymp)+" >>> ")
     if ans == "y":
         for n in d.nSymp:
-            NSans = input("\nDo you have/feel "+str(n)+" : ")
-            if NSans == 'y':
-                d.nAns.append(NSans)
+            NSans = input("\nDo you have/feel "+str(n)+" : \n4-Very much, 3-yes, 2-slightly, 1-not at all : ")
+            if NSans == '1':
+                d.nAns.append(0)
+            elif NSans == '2':
+                d.nAns.append(0.4)
+            elif NSans == '3':
+                d.nAns.append(0.8)
+            elif NSans == '4':
+                d.nAns.append(1)
     print()
 
 # # STEP: 3
-# Calculate percentage of symptom occurance
+# # Calculate percentage of symptom occurance
 symp_percent = {}
 for dispercent in diseaseObjArray:
-    ansSize = len(dispercent.nAns)
+    ansSize = sum(dispercent.nAns)
     tsymp = len(dispercent.nSymp)
     per = (ansSize / tsymp) * 100
     symp_percent[dispercent.name] = per
-# print(symp_percent)
+
+possibleDisease = []
+for k,v in symp_percent.items():
+    if v != 0.0:
+        possibleDisease.append([k,str(v)+" %"])
+print(possibleDisease)
+
 
 # # STEP: 4
 thisdepart = check_depart(symp_percent, Disease_to_dept)
 # print(thisdepart)
 
 # # STEP: 5
-# # Fetch data as per user
+# # Fetch data as per user entry
 data = fetchDatafromSQL(thisdepart)
 
 # # STEP: 6
